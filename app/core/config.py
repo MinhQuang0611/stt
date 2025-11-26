@@ -14,9 +14,9 @@ class Settings(BaseSettings):
     API_VERSIONS: str = os.environ.get("API_VERSIONS", "")
     API_VERSION: str = os.environ.get("API_VERSION", "v1")
     BACKEND_CORS_ORIGINS: str = os.environ.get("BACKEND_CORS_ORIGINS", '["*"]')
-    DATABASE_URL: str = (
-        f"postgresql+psycopg2://{os.environ.get('POSTGRES_USER')}:{os.environ.get('POSTGRES_PASSWORD')}@{os.environ.get('POSTGRES_HOST')}:{os.environ.get('POSTGRES_PORT')}/{os.environ.get('POSTGRES_DB')}"
-    )
+    # DATABASE_URL: str = (
+    #     f"postgresql+psycopg2://{os.environ.get('POSTGRES_USER')}:{os.environ.get('POSTGRES_PASSWORD')}@{os.environ.get('POSTGRES_HOST')}:{os.environ.get('POSTGRES_PORT')}/{os.environ.get('POSTGRES_DB')}"
+    # )
     ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24 * 7  # Token expired after 7 days
     SECURITY_ALGORITHM: str = "HS256"
     LOGGING_CONFIG_FILE: str = os.path.join(BASE_DIR, "logging.ini")

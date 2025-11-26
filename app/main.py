@@ -8,7 +8,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.core.router import router
 from app.models import Base
-from app.core.database import engine
+# from app.core.database import engine
 from app.core.config import settings
 from app.utils.exception_handler import (
     CustomException,
@@ -18,7 +18,7 @@ from app.utils.exception_handler import (
 )
 
 logging.config.fileConfig(settings.LOGGING_CONFIG_FILE, disable_existing_loggers=False)
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 
 def get_application() -> FastAPI:
@@ -46,12 +46,12 @@ def get_application() -> FastAPI:
     )
     application.add_middleware(
         CORSMiddleware,
-        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
+        allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    application.add_middleware(DBSessionMiddleware, db_url=settings.DATABASE_URL)
+    # application.add_middleware(DBSessionMiddleware, db_url=settings.DATABASE_URL)
     application.include_router(router, prefix=settings.API_PREFIX)
     application.add_exception_handler(CustomException, custom_error_handler)
     application.add_exception_handler(ValidationException, validation_exception_handler)
@@ -62,4 +62,4 @@ def get_application() -> FastAPI:
 
 app = get_application()
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=settings.DEBUG)
+    uvicorn.run(app, host="0.0.0.0", port=8977, reload=settings.DEBUG)
