@@ -3,7 +3,7 @@ import tempfile
 import shutil
 
 from typing import List
-from fastapi import APIRouter , File, UploadFile, HTTPException
+from fastapi import APIRouter , File, UploadFile, HTTPException, Form
 from fastapi.responses import JSONResponse
 
 from app.schemas.sche_stt import (
@@ -65,16 +65,16 @@ def save_upload_file(upload_file: UploadFile) -> str:
 @router.post("/stt/chunkformer", response_model=TranscriptionResponse)
 async def transcribe_chunkformer(
     file: UploadFile = File(...),
-    chunk_size: int = 64,
-    left_context: int = 128,
-    right_context: int = 128,
-    return_timestamps: bool = False
+    chunk_size: int = Form(64),
+    left_context: int = Form(128),
+    right_context: int = Form(128),
+    return_timestamps: bool = Form(False)
 ):
-
     temp_file = None
     
     try:
         temp_file = save_upload_file(file)
+        
         response = stt_service.transcribe_chunkformer(
             temp_file,
             chunk_size,
@@ -82,10 +82,12 @@ async def transcribe_chunkformer(
             right_context,
             return_timestamps
         )
+        
         print("Transcription response:", response)
+        
         return TranscriptionResponse(
             model="chunkformer",
-            transcription=response["transcription"],
+            transcription=response.get("transcription", ""),
             time_stamps=response.get("time_stamps"),
             status="success"
         )
