@@ -12,6 +12,7 @@ from chunkformer import ChunkFormerModel
 from typing import Union, List, Dict
 from sherpa_onnx import OfflineRecognizer
 
+from app.utils.convert_audio import convert_to_wav_pcm
 class STTService:
     def __init__(self):
         self.chunkformer_model = None
@@ -159,24 +160,23 @@ class STTService:
         else:
             return response
 
-    
     def transcribe_zipformer(self, audio_path: str) -> str:
-        """Transcribe với Zipformer model - theo cách của sherpa-onnx"""
         if self.zipformer_model is None:
             raise RuntimeError("Zipformer model chưa được load")
-        
-        samples, sample_rate = self.read_wave(audio_path)
-        
+
+        safe_audio_path = convert_to_wav_pcm(audio_path)
+
+        samples, sample_rate = self.read_wave(safe_audio_path)
+
         stream = self.zipformer_model.create_stream()
-        
         stream.accept_waveform(sample_rate, samples)
-        
         self.zipformer_model.decode_stream(stream)
-        
+
         result = stream.result.text
-        
+
         return result
-    
+
+
     def batch_transcribe_chunkformer(
         self,
         audio_paths: List[str],

@@ -7,8 +7,8 @@ import app.api as root_api
 
 router = APIRouter()
 
-router.include_router(api_healthcheck.router, tags=["[Current] Health Check"])
-router.include_router(api_auth.router, tags=["[Current] Auth"])
+# router.include_router(api_healthcheck.router, tags=["[Current] Health Check"])
+# router.include_router(api_auth.router, tags=["[Current] Auth"])
 
 for finder, subpackage_name, is_pkg in pkgutil.iter_modules(root_api.__path__):
     if is_pkg and subpackage_name.startswith("v"):
